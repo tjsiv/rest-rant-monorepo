@@ -5,8 +5,6 @@ const jwt = require('json-web-token')
 
 const {User} = db
 
-  
-  
 router.post('/', async (req, res) => {
     
     let user = await User.findOne({
@@ -22,43 +20,22 @@ router.post('/', async (req, res) => {
         res.json({ user: user, token: result.value })
     }
 })
-
-
+  
 router.get('/profile', async (req, res) => {
-    
-   try {
-        const [authenticationMethod, token] = req.header.autherization.split(' ')
-
-        if(authenticationMethod!== 'Bearer'){
-            const result = await jwt.deccode(process.env.JWT_SECRET,  token);
-            const {id} = result.value;
-            
-            let user = await User.findOne({
-                where: {
-                    userId: id
-                }
-            })
-            res.json(user)
-        }
-
-        
-        
-   } catch {
-
-        res.json(null)
-   }
+    res.json(req.currentUser)
 })
 
 
-router.post('/super-important-route', async (req, res) => {
-    if(req.session.userId){
-        console.log('Do the really super important thing')
-        res.send('Done')
-    } else {
-        console.log('You are not authorized to do the super important thing')
-        res.send('Denied')
-    }
-})
+//bonus
+// router.post('/super-important-route', async (req, res) => {
+//     if(req.session.userId){
+//         console.log('Do the really super important thing')
+//         res.send('Done')
+//     } else {
+//         console.log('You are not authorized to do the super important thing')
+//         res.send('Denied')
+//     }
+// })
 
 
 
